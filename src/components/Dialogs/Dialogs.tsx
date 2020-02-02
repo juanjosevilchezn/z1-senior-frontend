@@ -88,7 +88,7 @@ const TakePictureDialog:FunctionComponent<{}> = () => {
                             <Text color = 'white'>Fit your ID card inside the frame. The picture will be taken automatically.</Text>
                         </TextContainer>
                         <Camera/>
-                        <CloseButton onClick = { _onCancelButtonClick }>{ status === 'success' ? 'ACCEPT' : 'CANCEL' }</CloseButton>
+                        <CloseButton onClick = { _onCancelButtonClick }>CANCEL</CloseButton>
                     </DialogContent>
                 </Dialog>
             )}

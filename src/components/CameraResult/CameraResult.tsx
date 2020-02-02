@@ -86,7 +86,7 @@ const CameraResult:FunctionComponent<{}> = () => {
     return (
         <Container status = { status }>
             { pictureTaken !== '' ? <Image alt = 'result' src = { pictureTaken }/> : null }
-            { status !== 'success' ? <Button onClick = {() => setIsDialogOpen(true)}>{ pictureTaken !== '' ? 'RETAKE A PICTURE' : 'TAKE A PICTURE' }</Button> : null }
+            { status !== 'success' ? <Button onClick = {() => setIsDialogOpen(true)}>{ pictureTaken !== '' ? 'RETAKE PICTURE' : 'TAKE A PICTURE' }</Button> : null }
             { status !== '' ? <Message color = { status }><StyledIcon alt = 'result' src = { status === 'success' ? SuccessIcon : ErrorIcon }/>{ status === 'success' ? 'APPROVED' : 'REJECTED' }</Message> : null }
         </Container>
     )
