@@ -1,32 +1,41 @@
 import React, { FunctionComponent, useContext } from 'react'
 import styled from 'styled-components'
-import EmptyImage from '../../assets/empty.png'
-import ColorService from '../../services/ColorService'
+import { Icon, Image } from '../Images/Images'
+import ErrorIcon from '../../assets/error-white-icon.png'
+import SuccessIcon from '../../assets/success-white-icon.png'
 import { GlobalContext } from '../../contexts/GlobalContext'
 
 type ContainerProps = {
     status: string
 }
 
+type MessageProps = {
+    color: string
+}
+
 const Container = styled.div<ContainerProps>`
-    border-color: ${props => ColorService.getColorByStatus(props.status || '')};
+    border-color: ${props => props.theme.colors[props.status] || 'unset'};
     border-radius: 10px;
     border-style: solid;
     border-width: 2px;
-    height: 14rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 12rem;
     margin-top: 2rem;
     position: relative;
-    width: 22rem;
+    width: 95%;
+
+    @media only screen and (min-width: 768px) {
+        width: 55%;
+        height: 24rem;
+    }
 `
 
-const Image = styled.img`
-    height: 100%;
-    object-fit: contain;
-    width: 100%;
-`
+
 
 const Button = styled.button`
-    background-color: #2f0079;
+    background-color: ${props => props.theme.colors.primary};
     border: unset;
     border-radius: 32px;
     box-shadow: 0px 10px 20px rgba(47, 0, 121, 0.4);
@@ -42,10 +51,11 @@ const Button = styled.button`
     -o-transition: all .2s ease-in;
     -webkit-transition: all .2s ease-in;
     transition: all .2s ease-in;
+    width: fit-content;
 
     &:hover {
         background-color: white;
-        color: #2f0079;
+        color: ${props => props.theme.colors.primary};
     }
 
     &:focus {
@@ -53,15 +63,31 @@ const Button = styled.button`
     }
 `
 
+const Message = styled.div<MessageProps>`
+    align-items: center;
+    background-color: ${props => props.theme.colors[props.color] || 'unset'};
+    border-radius: 1rem; 
+    bottom: -1rem;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    right: 1rem;
+`
 
+const StyledIcon = styled(Icon)`
+    margin-right: 0.5rem;
+`
 
 const CameraResult:FunctionComponent<{}> = () => {
-    const { status } = useContext(GlobalContext)
+    const { pictureTaken, status, setIsDialogOpen } = useContext(GlobalContext)
 
     return (
         <Container status = { status }>
-            <Image alt = 'result' src = { status !== 'error' && status !== 'success' ? EmptyImage : '' }/>
-            <Button onClick = {() => console.log('clicked')}>TAKE A PICTURE</Button>
+            { pictureTaken !== '' ? <Image alt = 'result' src = { pictureTaken }/> : null }
+            { status !== 'success' ? <Button onClick = {() => setIsDialogOpen(true)}>{ pictureTaken !== '' ? 'RETAKE A PICTURE' : 'TAKE A PICTURE' }</Button> : null }
+            { status !== '' ? <Message color = { status }><StyledIcon alt = 'result' src = { status === 'success' ? SuccessIcon : ErrorIcon }/>{ status === 'success' ? 'APPROVED' : 'REJECTED' }</Message> : null }
         </Container>
     )
 }

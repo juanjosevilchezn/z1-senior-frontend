@@ -10,6 +10,7 @@ type TextProps = {
 
 const Title = styled.h2<TitleProps>`
     color: ${props => props.color || 'black'};
+    margin-top: unset;
 `
 
 const Text = styled.p<TextProps>`
