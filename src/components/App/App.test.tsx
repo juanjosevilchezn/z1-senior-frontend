@@ -1,9 +1,11 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act } from 'react-dom/test-utils'
 import App from './App'
+import { render } from 'react-dom'
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />)
-  const linkElement = getByText(/learn react/i)
-  expect(linkElement).toBeInTheDocument()
+describe('<App />', () => {
+    it('renders without crashing', async () => {
+        const container = document.createElement('div')
+        await act(() => render(<App/>, container))
+    })
 })
