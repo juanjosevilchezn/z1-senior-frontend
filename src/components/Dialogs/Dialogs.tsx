@@ -1,24 +1,29 @@
 import React, { FunctionComponent, useContext } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { CSSTransition } from 'react-transition-group'
 import { Title, Text } from '../Texts/Texts'
 import Camera from '../Camera/Camera'
 import BackgroundImage from '../../assets/dialog-background.jpg'
 import { GlobalContext } from '../../contexts/GlobalContext'
 
 type DialogProps = {
-    open: boolean
+    state: Object
 }
 
 const Dialog = styled.div<DialogProps>`
     background-image: url(${BackgroundImage});
     background-position: center;
-    display: ${props => props.open ? 'block' : 'none'};
+    bottom: 0;
     height: 100%;
     left: 0;
-    position: absolute;
-    top: 0;
+    position: fixed;
     width: 100%;
     z-index: 999;
+
+    box-sizing: content-box;
+    display: ${({ state }) => state === 'exited' ? 'none' : 'block'};
+    transition: 1s;
+    transform: translateY(${({ state }) => (state === 'entering' || state === 'entered') ? '0%' : '100%'});
 `
 
 const DialogContent = styled.div`
@@ -63,23 +68,31 @@ const CloseButton = styled.button`
 `
 
 const TakePictureDialog:FunctionComponent<{}> = () => {
-    const { isDialogOpen, setIsDialogOpen, status } = useContext(GlobalContext)
+    const { isDialogOpen, setIsDialogOpen, pictureTaken, status, setStatus } = useContext(GlobalContext)
 
     const _onCancelButtonClick = () => {
         setIsDialogOpen(false)
+
+        if (pictureTaken) {
+            setStatus('error')
+        }
     }
 
     return (
-        <Dialog open = { isDialogOpen }>
-            <DialogContent>
-                <TextContainer>
-                    <Title color = 'white'>Take picture</Title>
-                    <Text color = 'white'>Fit your ID card inside the frame. The picture will be taken automatically.</Text>
-                </TextContainer>
-                <Camera/>
-                <CloseButton onClick = { _onCancelButtonClick }>{ status === 'success' ? 'ACCEPT' : 'CANCEL' }</CloseButton>
-            </DialogContent>
-        </Dialog>
+        <CSSTransition in = { isDialogOpen } timeout = {{ enter: 1000, exit: 1000 }}>
+            {state => (
+                <Dialog state = { state }>
+                    <DialogContent>
+                        <TextContainer>
+                            <Title color = 'white'>Take picture</Title>
+                            <Text color = 'white'>Fit your ID card inside the frame. The picture will be taken automatically.</Text>
+                        </TextContainer>
+                        <Camera/>
+                        <CloseButton onClick = { _onCancelButtonClick }>{ status === 'success' ? 'ACCEPT' : 'CANCEL' }</CloseButton>
+                    </DialogContent>
+                </Dialog>
+            )}
+        </CSSTransition>
     )
 }
 

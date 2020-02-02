@@ -51,7 +51,7 @@ const Camera:FunctionComponent<{}> = () => {
 
                         if (res.summary.outcome === 'Approved') {
                             setStatus('success')
-                            setIsDialogOpen(true)
+                            setTimeout(() => setIsDialogOpen(false), 1000)
                         } else {
                             setStatus('error')
                         }
